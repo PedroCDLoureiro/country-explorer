@@ -1,3 +1,5 @@
+import {Link} from 'react-router'
+
 function CountryCard({ country }) {
     return (
         <div className="country-card">
@@ -19,6 +21,7 @@ function CountryCard({ country }) {
             )}
             <p>Região: {country.region}</p>
             <p>População: {country.population.toLocaleString()}</p>
+            <Link to={`/country/${country.uuid}`}>Ver detalhes</Link>
         </div>
     )
 }
