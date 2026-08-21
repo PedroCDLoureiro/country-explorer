@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import CountryCard from './components/CountryCard'
 
 function App() {
 
     const [countries, setCountries] = useState([])
     
-    console.log(countries);
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         async function getCountries() {
@@ -28,6 +30,9 @@ function App() {
 
             } catch (error) {
                 console.error('Error fetching countries:', error)
+                setError(error.message)
+            } finally {
+                setLoading(false)
             }
         }
 
@@ -37,8 +42,12 @@ function App() {
     return (
         <main>
             <h1>Country Explorer</h1>
+
+            {loading && <p>Carregando países...</p>}
+            {error && <p>Não foi possível carregar os países.</p>}
+
             {countries.map((country) => (
-                <p key={country.uuid}>{country.names.common}</p>
+                <CountryCard key={country.uuid} country={country} />
             ))}
         </main>
     )
