@@ -5,7 +5,13 @@ function Home() {
 
     const [countries, setCountries] = useState([])
     const [search, setSearch] = useState('')
+    const [debouncedSearch, setDebouncedSearch] = useState('')
     const [region, setRegion] = useState('')
+    const [page, setPage] = useState(1)
+    const limit = 20
+    const offset = (page - 1) * limit
+    const [total, setTotal] = useState(0)
+    const totalPages = Math.ceil(total / limit)
     
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -13,8 +19,21 @@ function Home() {
     useEffect(() => {
         async function getCountries() {
             try{
+                const params = new URLSearchParams({
+                    limit: limit,
+                    offset: offset,
+                })
+
+                if (debouncedSearch) {
+                    params.set('names.common', debouncedSearch)
+                }
+
+                if (region) {
+                    params.set('region', region)
+                }
+
                 const response = await fetch(
-                    'https://api.restcountries.com/countries/v5?limit=100',
+                    `https://api.restcountries.com/countries/v5?${params.toString()}`,
                     {
                         headers: {
                             Authorization: `Bearer ${import.meta.env.VITE_REST_COUNTRIES_API_KEY}`
@@ -27,7 +46,9 @@ function Home() {
                 }
     
                 const data = await response.json()
+
                 setCountries(data.data.objects)
+                setTotal(data.data.meta.total)
 
             } catch (error) {
                 console.error('Error fetching countries:', error)
@@ -38,19 +59,21 @@ function Home() {
         }
 
         getCountries()
-    }, [])
+    }, [page, debouncedSearch, region])
 
-    const filteredCountries = countries.filter((country) => {
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(search)
+        }, 500)
 
-        // Filtro de pesquisa
+        return () => {
+            clearTimeout(timer)
+        }
+    }, [search])
 
-        const searchFilter = country.names.common.toLowerCase().includes(search.toLowerCase())
-
-        // Filtro de região
-        const regionFilter = region === '' || country.region === region
-
-        return searchFilter && regionFilter
-    })
+    useEffect(() => {
+        setPage(1)
+    }, [debouncedSearch, region])
 
     return (
         <main className="home">
@@ -83,15 +106,37 @@ function Home() {
 
             {error && <p>Não foi possível carregar os países.</p>}
 
-            {filteredCountries.length === 0 && !loading && !error && (
+            {countries.length === 0 && !loading && !error && (
                 <p>Nenhum país encontrado.</p>
             )}
 
             <section className="countries-grid">
-                {filteredCountries.map((country) => (
+                {countries.map((country) => (
                     <CountryCard key={country.uuid} country={country} />
                 ))}
             </section>
+
+            {!loading && (
+                <div className="pagination">
+                    <button
+                        onClick={() => setPage(page - 1)}
+                        disabled={page === 1}
+                    >
+                        Anterior
+                    </button>
+
+                    <span>
+                        Página {page} de {totalPages}
+                    </span>
+
+                    <button
+                        onClick={() => setPage(page + 1)}
+                        disabled={page === totalPages}
+                    >
+                        Próxima
+                    </button>
+                </div>
+            )}
 
         </main>
     )

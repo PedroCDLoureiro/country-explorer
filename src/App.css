@@ -88,6 +88,42 @@ select {
     margin-top: 0;
 }
 
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 40px;
+}
+
+.pagination button {
+    padding: 10px 18px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #fff;
+    color: #1f2937;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+    background: #1f2937;
+    color: #fff;
+    border-color: #1f2937;
+}
+
+.pagination button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.pagination span {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
 @media (max-width: 1000px) {
     .countries-grid {
         grid-template-columns: repeat(3, 1fr);
@@ -112,5 +148,18 @@ select {
 
     .countries-grid {
         grid-template-columns: 1fr;
+    }
+
+    .pagination {
+        gap: 10px;
+    }
+
+    .pagination button {
+        padding: 9px 12px;
+        font-size: 14px;
+    }
+
+    .pagination span {
+        font-size: 13px;
     }
 }
