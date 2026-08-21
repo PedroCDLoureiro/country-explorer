@@ -32,7 +32,12 @@ function CountryCard({ country }) {
                 )}
                 <p>Região: {country.region}</p>
                 <p>População: {country.population.toLocaleString()}</p>
-                <Link to={`/country/${country.uuid}`}>Ver detalhes</Link>
+                <Link
+                    className="details-button"
+                    to={`/country/${country.uuid}`}
+                >
+                    Ver detalhes
+                </Link>
             </div>
         </div>
     )
