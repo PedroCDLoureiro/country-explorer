@@ -53,38 +53,45 @@ function Home() {
     })
 
     return (
-        <main>
-            <h1>Country Explorer</h1>
+        <main className="home">
+            <header className="home-header">
+                <h1>Country Explorer</h1>
+            </header>
 
-            <input 
-                type="text" 
-                placeholder="Pesquisar país" 
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-            />
+            <section className="filters"> 
+                <input 
+                    type="text" 
+                    placeholder="Pesquisar país" 
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                />
 
-            <select
-                value={region}
-                onChange={(e) => setRegion(e.target.value)}
-            >
-                <option value="">Todas as regiões</option>
-                <option value="Africa">África</option>
-                <option value="Americas">Américas</option>
-                <option value="Asia">Ásia</option>
-                <option value="Europe">Europa</option>
-                <option value="Oceania">Oceania</option>
-            </select>
+                <select
+                    value={region}
+                    onChange={(e) => setRegion(e.target.value)}
+                >
+                    <option value="">Todas as regiões</option>
+                    <option value="Africa">África</option>
+                    <option value="Americas">Américas</option>
+                    <option value="Asia">Ásia</option>
+                    <option value="Europe">Europa</option>
+                    <option value="Oceania">Oceania</option>
+                </select>
+            </section>
 
             {loading && <p>Carregando países...</p>}
-            {error && <p>Não foi possível carregar os países.</p>}
 
-            {filteredCountries.map((country) => (
-                <CountryCard key={country.uuid} country={country} />
-            ))}
+            {error && <p>Não foi possível carregar os países.</p>}
 
             {filteredCountries.length === 0 && !loading && !error && (
                 <p>Nenhum país encontrado.</p>
             )}
+
+            <section className="countries-grid">
+                {filteredCountries.map((country) => (
+                    <CountryCard key={country.uuid} country={country} />
+                ))}
+            </section>
 
         </main>
     )

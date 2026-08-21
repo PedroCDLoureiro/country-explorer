@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router'
 
+import '../assets/css/CountryDetails.css'
+
 function CountryDetails() {
 
     const { id } = useParams()
@@ -53,25 +55,43 @@ function CountryDetails() {
     }
 
     return (
-        <main>
-            <button onClick={() => navigate(-1)}>
+        <main className="country-details">
+            <button className="back-button" onClick={() => navigate(-1)}>
                 ← Voltar
             </button>
-            <h1>{country.names.common}</h1>
-            <img src={country.flag.url_svg} alt={country.flag.description} />
-            <p>
-                {country.capitals.length > 1 ? 'Capitais' : 'Capital'}:{' '}
-                {country.capitals.length > 0
-                    ? country.capitals.map((capital) => capital.name).join(', ')
-                    : 'Não informada'}
-            </p>
-            <p>Continentes: {country.continents.length > 0 ? country.continents.join(', ') : 'Não informado'}</p>
-            <p>Região: {country.region}</p>
-            <p>Subregião: {country.subregion}</p>
-            <p>População: {country.population.toLocaleString('pt-BR')}</p>
-            <p>Área: {country.area.kilometers.toLocaleString('pt-BR')} km²</p>
-            <p>Moeda: {country.currencies.length > 0 ? country.currencies[0].name : 'Não informada'}</p>
-            <p>Idiomas: {country.languages.length > 0 ? country.languages.map((lang) => lang.name).join(', ') : 'Não informado'}</p>
+
+            <section className="country-details-content">
+                <div className="country-details-flag">
+                    {country.flag?.url_svg ? (
+                        <img
+                            src={country.flag.url_svg}
+                            alt={country.flag.description || `Bandeira de ${country.names.common}`}
+                        />
+                    ) : (
+                        <div className="country-card-no-flag">
+                            Bandeira não disponível
+                        </div>
+                    )}
+                </div>
+                <div className="country-details-info">
+                    <h1>{country.names.common}</h1>
+                    <p>
+                        <strong>
+                        {country.capitals.length > 1 ? 'Capitais' : 'Capital'}:{' '}
+                        </strong>
+                        {country.capitals.length > 0
+                            ? country.capitals.map((capital) => capital.name).join(', ')
+                            : 'Não informada'}
+                    </p>
+                    <p><strong>Continentes: </strong>{country.continents.length > 0 ? country.continents.join(', ') : 'Não informado'}</p>
+                    <p><strong>Região: </strong>{country.region}</p>
+                    <p><strong>Subregião: </strong>{country.subregion}</p>
+                    <p><strong>População: </strong>{country.population.toLocaleString('pt-BR')}</p>
+                    <p><strong>Área: </strong>{country.area.kilometers.toLocaleString('pt-BR')} km²</p>
+                    <p><strong>Moeda: </strong>{country.currencies.length > 0 ? country.currencies[0].name : 'Não informada'}</p>
+                    <p><strong>Idiomas: </strong>{country.languages.length > 0 ? country.languages.map((lang) => lang.name).join(', ') : 'Não informado'}</p>
+                </div>
+            </section>
         </main>
     )
 }
